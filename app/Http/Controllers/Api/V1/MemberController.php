@@ -26,6 +26,16 @@ class MemberController extends Controller
         private SubscriptionService $subscriptionService
     ) {}
 
+        public function index()
+    {
+        try {
+            $members = $this->memberService->getPaginated(10); // استدعاء من PlanService
+            return $this->sendResponse($members, 'members retrieved successfully', 200);
+        } catch (\Exception $e) {
+            return $this->sendError('Failed to retrieve members', [$e->getMessage()], 500);
+        }
+    }
+
     public function store(StoreMemberRequest $request)
     {
         try {

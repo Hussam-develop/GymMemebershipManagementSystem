@@ -14,6 +14,11 @@ class MemberService
 {
     public function __construct(private MemberRepository $repo) {}
 
+
+    public function getPaginated($pages_count = 10)
+    {
+        return  $this->repo->getPaginated($pages_count);
+    }
     // 1) إنشاء العضو
 
     public function create(array $data): Member
@@ -25,7 +30,7 @@ class MemberService
     public function createWithSubscription(array $memberData, Plan $plan, bool $isPaid = true)
     {
         return DB::transaction(function () use ($memberData, $plan, $isPaid) {
-            
+
             // 1) إنشاء العضو
             $member = Member::create($memberData);
             // 2) إنشاء الاشتراك

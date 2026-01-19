@@ -6,6 +6,12 @@ use App\Models\Member;
 
 class MemberRepository
 {
+
+    public function getPaginated($pages_count = 10)
+    {
+        return Member::with('activeSubscription')->paginate($pages_count);
+    }
+
     public function create(array $data): Member
     {
         return Member::create($data);
