@@ -1,6 +1,34 @@
+# Gym ERP – Subscription System (Service & Repository Architecture)
+This project is built using Laravel and follows the Service Layer + Repository Pattern,
+a solid architectural approach that provides:
+
+Clean separation of concerns
+
+High maintainability
+
+Reusability of business logic
+
+Clear and organized service‑level business rules
+
+This structure works very well for medium‑sized applications and provides a clean, organized foundation.
+
+Important Note:  
+Although the project currently uses the Service/Repository Architecture,
+the recommended long‑term architecture — especially for large systems or ERP‑level applications —
+is Modular Architecture, because it offers:
+
+Better scalability
+
+Clear module isolation
+
+The ability to add new features without affecting the rest of the system
+
+A more organized and maintainable codebase
+
+This project can be easily evolved in the future to adopt a full Modular Architecture..
 
 
-
+******************************************************************************************************************
 
 
 Steps:
@@ -9,22 +37,28 @@ Steps:
 
 2-composer install
 
-cp .env.example .env
+3-cp .env.example .env
 
 إعداد DB
 
-php artisan key:generate
+4-php artisan key:generate
 
-php artisan migrate --seed
+5-php artisan migrate --seed
 
-Scheduler:
+6-Scheduler:
 
-php artisan schedule:work
+7-php artisan schedule:work
 
+8-Run the subscription verification command
 
-Command:
+9-php artisan subscriptions:check-expired
 
-php artisan subscriptions:check-expired
+10-run laravel project:
+php artisan serve
+
+11-run worker:
+php artisan queue:work
+
 
 
 
