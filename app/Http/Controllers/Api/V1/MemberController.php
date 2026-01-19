@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Member\StoreMemberRequest;
 use App\Http\Requests\Member\SubscribeMemberRequest;
+use App\Http\Resources\MemberResource;
 use App\Models\Member;
 use App\Models\Plan;
 use App\Services\MemberService;
@@ -26,11 +27,15 @@ class MemberController extends Controller
         private SubscriptionService $subscriptionService
     ) {}
 
-        public function index()
+    public function index()
     {
         try {
             $members = $this->memberService->getPaginated(10); // استدعاء من PlanService
-            return $this->sendResponse($members, 'members retrieved successfully', 200);
+            return $this->sendResponse(
+                MemberResource::collection($members),
+                'members retrieved successfully',
+                200
+            );
         } catch (\Exception $e) {
             return $this->sendError('Failed to retrieve members', [$e->getMessage()], 500);
         }
@@ -55,7 +60,7 @@ class MemberController extends Controller
 
 
 
-     /// اضافة اشتراك جديد للعضو
+    /// اضافة اشتراك جديد للعضو
     public function subscribe(SubscribeMemberRequest $request, Member $member)
     {
         try {
@@ -66,6 +71,4 @@ class MemberController extends Controller
             return $this->sendError('Failed to subscribe member', [$e->getMessage()], 500);
         }
     }
-
-
 }

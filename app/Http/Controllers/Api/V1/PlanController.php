@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Plan\StorePlanRequest;
 use App\Http\Requests\Plan\UpdatePlanRequest;
+use App\Http\Resources\PlanResource;
 use App\Models\Plan;
 use App\Services\PlanService;
 use App\Traits\HandleResponseTrait;
@@ -22,7 +23,11 @@ class PlanController extends Controller
     {
         try {
             $plans = $this->service->getPaginated(10); // استدعاء من PlanService
-            return $this->sendResponse($plans, 'Plans retrieved successfully', 200);
+            return $this->sendResponse(
+                PlanResource::collection($plans),
+                'Plans retrieved successfully',
+                200
+            );
         } catch (\Exception $e) {
             return $this->sendError('Failed to retrieve plans', [$e->getMessage()], 500);
         }

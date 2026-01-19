@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Checkin\StoreCheckinRequest;
+use App\Http\Resources\CheckinResource;
 use App\Services\CheckinService;
 use App\Traits\HandleResponseTrait;
 use Illuminate\Http\Request;
@@ -19,7 +20,7 @@ class CheckinController extends Controller
         try {
             $member = $request->get('member'); // Injected by middleware
             $checkin = $this->service->checkin($member);
-            return $this->sendResponse($checkin, 'Check-in recorded successfully', 201);
+            return $this->sendResponse(new CheckinResource($checkin), 'Check-in recorded successfully', 201);
         } catch (\Exception $e) {
             return $this->sendError('Failed to record check-in', [$e->getMessage()], 500);
         }
