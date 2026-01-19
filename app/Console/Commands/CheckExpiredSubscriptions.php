@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands;
 
+use App\Jobs\ProcessExpiredSubscriptionsJob;
+use App\Jobs\ProcessExpiringSoonSubscriptionsJob;
 use App\Notifications\SubscriptionExpiringSoon;
 use App\Services\SubscriptionService;
 use Illuminate\Console\Command;
@@ -31,17 +33,11 @@ class CheckExpiredSubscriptions extends Command
      */
     public function handle()
     {
-        // get expired subscriptions by subscription_end_date
-        $expired = $this->subscriptionService->getExpired();
-        foreach ($expired as $subscription) {
-            // update subscription status to Expired
-            $this->subscriptionService->markExpired($subscription);
-        }
-        //get Subscriptions Expiring Soon by days
-        $expiring = $this->subscriptionService->getExpiringSoon(3);
-        foreach ($expiring as $subscription) {
-            // notify members
-            $subscription->member->notify(new SubscriptionExpiringSoon($subscription));
-        }
+
+
+        // Dispatch job to process expired subscriptions
+        dispatch(new ProcessExpiredSubscriptionsJob());
+        // Dispatch job to process expiring soon subscriptions
+        dispatch(new ProcessExpiringSoonSubscriptionsJob(3));
     }
 }
