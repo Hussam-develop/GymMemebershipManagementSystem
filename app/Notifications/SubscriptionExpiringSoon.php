@@ -27,21 +27,9 @@ class SubscriptionExpiringSoon extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['database', 'mail'];
+        return ['database'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     */
-
-    public function toMail(object $notifiable): MailMessage
-    {
-        return (new MailMessage)
-            ->subject('Your subscription is expiring soon')
-            ->line('Your gym subscription will expire on ' . $this->subscription->subscription_end_date->toFormattedDateString())
-            ->action('Renew now', url('/'))
-            ->line('Thank you for being with us!');
-    }
 
     public function toDatabase($notifiable): array
     {

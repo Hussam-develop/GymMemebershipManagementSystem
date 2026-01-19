@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Notifications\SubscriptionExpiringSoon;
 use App\Services\SubscriptionService;
 use Illuminate\Console\Command;
 
@@ -30,17 +31,17 @@ class CheckExpiredSubscriptions extends Command
      */
     public function handle()
     {
+        // get expired subscriptions by subscription_end_date
         $expired = $this->subscriptionService->getExpired();
         foreach ($expired as $subscription) {
+            // update subscription status to Expired
             $this->subscriptionService->markExpired($subscription);
         }
-        $this->subscriptionService->notifyExpiringSoon(3);
-        $this->info('Expired subscriptions updated and expiring notifications sent.');
-
-
+        //get Subscriptions Expiring Soon by days
         $expiring = $this->subscriptionService->getExpiringSoon(3);
         foreach ($expiring as $subscription) {
-            $subscription->member->notify(new SubscriptionExpiringSoonNotification($subscription));
+            // notify members
+            $subscription->member->notify(new SubscriptionExpiringSoon($subscription));
         }
     }
 }

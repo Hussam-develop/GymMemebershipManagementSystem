@@ -6,6 +6,7 @@ use App\Enums\StatusEnum;
 use App\Models\Subscription;
 use App\Models\Member;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class SubscriptionRepository
 {
@@ -16,7 +17,7 @@ class SubscriptionRepository
 
     public function getExpired()
     {
-        return Subscription::whereDate('subscription_end_date', '<', now())
+        return Subscription::whereDate('subscription_end_date', '<', Carbon::now())
             ->where('status', '!=', StatusEnum::Expired)
             ->with('member')
             ->get();
@@ -33,9 +34,12 @@ class SubscriptionRepository
             ->get();
     }
 
+  
     public function markExpired(Subscription $subscription): void
     {
-        $subscription->update(['status' => StatusEnum::Expired]);
-        $subscription->member->update(['status' => StatusEnum::Expired]);
+        DB::transaction(function () use ($subscription) { // تحديث حالة الاشتراك
+            $subscription->update(['status' => StatusEnum::Expired]); // تحديث حالة العضو المرتبط
+            $subscription->member->update(['status' => StatusEnum::Expired]);
+        });
     }
 }
