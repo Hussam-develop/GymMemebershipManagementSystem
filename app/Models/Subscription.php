@@ -38,12 +38,12 @@ class Subscription extends Model
     }
     public function scopeActive($query)
     {
-        return $query->where('status', StatusEnum::Active->value)->where('is_paid', true)->whereDate('subscription_end_date', '>=', now());
+        return $query->where('status', StatusEnum::Active->value)->where('is_paid', true)->whereDate('subscription_end_date', '>=', Carbon::now());
     }
 
     public function scopeExpired($query)
     {
-        return $query->where('status', StatusEnum::Expired->value)->orWhereDate('subscription_end_date', '<', now());
+        return $query->where('status', StatusEnum::Expired->value)->orWhereDate('subscription_end_date', '<', Carbon::now());
     }
 
     public function isExpired(): bool

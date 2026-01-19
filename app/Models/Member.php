@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\StatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Member extends Model
 {
@@ -33,7 +34,7 @@ class Member extends Model
         return $this->hasOne(Subscription::class)
             ->where('status', StatusEnum::Active)
             ->where('is_paid', true)
-            ->whereDate('subscription_end_date', '>=', now());
+            ->whereDate('subscription_end_date', '>=', Carbon::now());
     }
 
     // filter active member
